@@ -3,7 +3,7 @@ private class TestTeamOrdersController {
     // Méthode de configuration pour les données de test
     @TestSetup
     static void setupTestData() {
-        Integer nbAccounts = 1;  // Mettez ici le nombre de comptes que vous souhaitez créer
+        Integer nbAccounts = 10;  // Mettez ici le nombre de comptes que vous souhaitez créer
         TestDataFactory.createTestAccounts(nbAccounts);
     }
     

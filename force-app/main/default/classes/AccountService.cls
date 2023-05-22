@@ -31,46 +31,4 @@ public class AccountService {
         update accountsToUpdate;
     }
     
-    
-    
-       public static void updateAccount(Map<Id, SObject> oldOrderMap, List<SObject> newOrders) {
-        List<Id> orderIds = new List<Id>();
-        for (SObject obj : newOrders) {
-            Order ord = (Order) obj;
-            orderIds.add(ord.Id);
-        }
-        
-        Map<Id, OrderItem> oldOrderItems = getOrderItemsById(orderIds);
-        Map<Id, OrderItem> newOrderItems = getOrderItemsById(orderIds);
-        
-        for (SObject obj : newOrders) {
-            Order newOrder = (Order) obj;
-            Order oldOrder = (Order) oldOrderMap.get(newOrder.Id);
-            
-            OrderItem newOrderItem = newOrderItems.get(newOrder.Id);
-            OrderItem oldOrderItem = oldOrderItems.get(oldOrder.Id);
-            
-            if (oldOrderItem != null && newOrderItem != null) {
-                Decimal oldTotalAmount = oldOrderItem.UnitPrice * oldOrderItem.Quantity;
-                Decimal newTotalAmount = newOrderItem.UnitPrice * newOrderItem.Quantity;
-                
-                Decimal amountDifference = newTotalAmount - oldTotalAmount;
-                
-                if (amountDifference != 0) {
-                    Account acc = [SELECT Chiffre_d_affaire__c FROM Account WHERE Id = :newOrder.AccountId];
-                    acc.Chiffre_d_affaire__c += amountDifference;
-                    update acc;
-                }
-            }
-        }
-    }
-    
-    
-    public static Map<Id, OrderItem> getOrderItemsById(List<Id> orderItemIds) {
-        Map<Id, OrderItem> orderItems = new Map<Id, OrderItem>([SELECT Id, OrderId, UnitPrice, Quantity FROM OrderItem WHERE Id IN :orderItemIds]);
-        return orderItems;
-    }
-       
-    
-    
 }

@@ -3,7 +3,7 @@ private class TestAccountService {
     // Méthode de configuration pour les données de test
     @TestSetup
     static void setupTestData() {
-        Integer nbAccounts = 500; // Nombre de comptes à créer
+        Integer nbAccounts = 800; // Nombre de comptes à créer
         TestDataFactory.createTestAccounts(nbAccounts); 
     }
     
@@ -11,7 +11,7 @@ private class TestAccountService {
     static void testUpdateAccountRevenueBatch() {
         Test.startTest();
         UpdateAccountRevenueBatch batch = new UpdateAccountRevenueBatch();
-        Database.executeBatch(batch, 600); 
+        Database.executeBatch(batch, 900); 
         Test.stopTest();
         
         Map<Id, Decimal> expectedRevenue = new Map<Id, Decimal>();
@@ -44,7 +44,7 @@ private class TestAccountService {
         Decimal initialTotalValue = (Decimal)initialTotal.get('somme');
         initialTotalValue = (initialTotalValue == null) ? 0 : initialTotalValue;
 
-        Id batchJobId = Database.executeBatch(batch, 600); // Réduit la taille du lot
+        Id batchJobId = Database.executeBatch(batch, 900); // Réduit la taille du lot
         Test.stopTest();
         
         // Récupère la somme totale de Chiffre_d'affaire__c après mise à jour
