@@ -1,5 +1,6 @@
 public class TestDataFactory {
-    public static List<Account> createTestAccounts(Integer nbAccounts, Integer Quantity) {
+    public static List<Account> createTestAccounts(Integer nbAccounts) {
+        Test.startTest();
         List<Account> accounts = new List<Account>();
         Product2 testProduct = createTestProduct('Test Product');
         PricebookEntry testPricebookEntry = createTestPricebookEntry(testProduct.Id, 200.00);
@@ -15,12 +16,35 @@ public class TestDataFactory {
         }
     
         insert accounts;
+        
+        List<Order> orders = new List<Order>();
+        List<OrderItem> orderItems = new List<OrderItem>();
     
         for (Account acc : accounts) {
-            Order testOrder = createTestOrder(acc.Id, 'Ordered', testPricebookEntry.Pricebook2Id);
-            createTestOrderItem(testOrder.Id, testPricebookEntry.Id, 200, Quantity);
+            Order testOrder = new Order(
+                AccountId = acc.Id, 
+                Status = 'Ordered', 
+                Pricebook2Id = testPricebookEntry.Pricebook2Id, 
+                EffectiveDate = Date.today(), 
+                ShipmentCost__c = 10.0,  // Remplacez par la valeur par défaut que vous voulez
+                NetAmount__c = 0.0  // Remplacez par la valeur par défaut que vous voulez
+            );
+            orders.add(testOrder);
+            
+            // Vous ne pouvez pas créer de OrderItems ici car vous devez d'abord insérer les Orders pour obtenir leurs Ids
+            // Nous allons donc créer les OrderItems après avoir inséré les Orders.
         }
-    
+        
+        insert orders;
+        
+        for (Order ord : orders) {
+            OrderItem testOrderItem = new OrderItem(OrderId = ord.Id, PricebookEntryId = testPricebookEntry.Id, UnitPrice = 200, Quantity = 1);
+            orderItems.add(testOrderItem);
+        }
+        
+        insert orderItems;
+        
+        Test.stopTest();
         return accounts;
     }
     

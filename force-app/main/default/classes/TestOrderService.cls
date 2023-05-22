@@ -4,7 +4,7 @@ private class TestOrderService {
     @TestSetup
     static void setupTestData() {
         Integer nbAccounts = 10;  // Mettez ici le nombre de comptes que vous souhaitez créer
-        TestDataFactory.createTestAccounts(nbAccounts,4);
+        TestDataFactory.createTestAccounts(nbAccounts);
     }
 
     @isTest

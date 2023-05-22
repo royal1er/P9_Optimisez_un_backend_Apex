@@ -4,7 +4,7 @@ private class TestTeamOrdersController {
     @TestSetup
     static void setupTestData() {
         Integer nbAccounts = 1;  // Mettez ici le nombre de comptes que vous souhaitez créer
-        TestDataFactory.createTestAccounts(nbAccounts,10);
+        TestDataFactory.createTestAccounts(nbAccounts);
     }
     
     

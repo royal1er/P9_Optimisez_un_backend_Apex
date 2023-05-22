@@ -1,9 +1,9 @@
 global class UpdateAllAccountsRevenueBatch implements Database.Batchable<sObject> {
-    global Database.QueryLocator start(Database.BatchableContext info) {
+    global Database.QueryLocator start(Database.BatchableContext context) {
         return Database.getQueryLocator('SELECT Id, AccountId, TotalAmount FROM Order');
     }
 
-    global void execute(Database.BatchableContext info, List<Order> scope) {
+    global void execute(Database.BatchableContext context, List<Order> scope) {
         AccountService.updateAccountRevenue(scope);
     }
 

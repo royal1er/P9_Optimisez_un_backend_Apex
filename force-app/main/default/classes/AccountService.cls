@@ -7,25 +7,28 @@ public class AccountService {
             }
         }
     
-        List<AggregateResult> totalSumOrder = [
-            SELECT accountId, SUM(TotalAmount) somme
+        Map<Id, Decimal> accountToTotalAmount = new Map<Id, Decimal>();
+        for (AggregateResult result : [
+            SELECT AccountId, SUM(TotalAmount) somme
             FROM Order 
             WHERE AccountId IN :accountIds AND AccountId != null
-            GROUP BY accountId
-        ];
-    
-        Map<Id, Account> accountsToUpdate = new Map<Id, Account>([SELECT Id, Chiffre_d_affaire__c FROM Account WHERE Id IN :accountIds]);
-    
-        for (AggregateResult result : totalSumOrder) {
-            Id accountId = (Id)result.get('accountId');
+            GROUP BY AccountId
+        ]) {
+            Id accountId = (Id)result.get('AccountId');
             Decimal amount = (Decimal)result.get('somme');
-            if (amount != null && accountId != null) {
-                Account acc = accountsToUpdate.get(accountId);
+            if (accountId != null && amount != null) {
+                accountToTotalAmount.put(accountId, amount);
+            }
+        }
+        
+        List<Account> accountsToUpdate = [SELECT Id, Chiffre_d_affaire__c FROM Account WHERE Id IN :accountIds];
+        for (Account acc : accountsToUpdate) {
+            Decimal amount = accountToTotalAmount.get(acc.Id);
+            if (amount != null) {
                 acc.Chiffre_d_affaire__c = (acc.Chiffre_d_affaire__c != null) ? acc.Chiffre_d_affaire__c + amount : amount;
             }
         }
-    
-        update accountsToUpdate.values();
+        update accountsToUpdate;
     }
     
     
